@@ -1,6 +1,6 @@
 use crate::item::{
-    Item,
-    equipment::{Equipment, equipment_type::Weapon},
+    item::Item,
+    equipment::{equipment::Equipment, equipment_type::equipment_type::Weapon},
 };
 
 use super::list::ItemList;
@@ -41,12 +41,12 @@ impl Weapon for Sword {
         self.range
     }
 
-    fn as_equipment(&self) -> Option<&dyn crate::item::equipment::Equipment> {
-        Some(self as &dyn crate::item::equipment::Equipment)
+    fn as_equipment(&self) -> Option<&dyn crate::item::equipment::equipment::Equipment> {
+        Some(self as &dyn crate::item::equipment::equipment::Equipment)
     }
 
-    fn as_equipment_mut(&mut self) -> Option<&mut dyn crate::item::equipment::Equipment> {
-        Some(self as &mut dyn crate::item::equipment::Equipment)
+    fn as_equipment_mut(&mut self) -> Option<&mut dyn crate::item::equipment::equipment::Equipment> {
+        Some(self as &mut dyn crate::item::equipment::equipment::Equipment)
     }
 
     fn on_use(&mut self) -> u32 {
@@ -70,11 +70,11 @@ impl Equipment for Sword {
         self.durability
     }
 
-    fn as_item(&self) -> Option<&dyn crate::item::Item> {
-        Some(self as &dyn crate::item::Item)
+    fn as_item(&self) -> Option<&dyn crate::item::item::Item> {
+        Some(self as &dyn crate::item::item::Item)
     }
 
-    fn as_armor(&self) -> Option<&dyn crate::item::equipment::equipment_type::Armor> {
+    fn as_armor(&self) -> Option<&dyn crate::item::equipment::equipment_type::equipment_type::Armor> {
         None
     }
 
@@ -82,11 +82,11 @@ impl Equipment for Sword {
         Some(self as &dyn Weapon)
     }
 
-    fn as_shield(&self) -> Option<&dyn crate::item::equipment::equipment_type::Shield> {
+    fn as_shield(&self) -> Option<&dyn crate::item::equipment::equipment_type::equipment_type::Shield> {
         None
     }
 
-    fn as_tool(&self) -> Option<&dyn crate::item::equipment::equipment_type::Tool> {
+    fn as_tool(&self) -> Option<&dyn crate::item::equipment::equipment_type::equipment_type::Tool> {
         None
     }
     
@@ -94,7 +94,7 @@ impl Equipment for Sword {
         Some(self as &mut dyn Item)
     }
     
-    fn as_armor_mut(&mut self) -> Option<&mut dyn crate::item::equipment::equipment_type::Armor> {
+    fn as_armor_mut(&mut self) -> Option<&mut dyn crate::item::equipment::equipment_type::equipment_type::Armor> {
         None
     }
     
@@ -102,11 +102,11 @@ impl Equipment for Sword {
         Some(self as &mut dyn Weapon)
     }
     
-    fn as_shield_mut(&mut self) -> Option<&mut dyn crate::item::equipment::equipment_type::Shield> {
+    fn as_shield_mut(&mut self) -> Option<&mut dyn crate::item::equipment::equipment_type::equipment_type::Shield> {
         None
     }
     
-    fn as_tool_mut(&mut self) -> Option<&mut dyn crate::item::equipment::equipment_type::Tool> {
+    fn as_tool_mut(&mut self) -> Option<&mut dyn crate::item::equipment::equipment_type::equipment_type::Tool> {
         None
     }
 }

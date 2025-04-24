@@ -1,4 +1,4 @@
-use crate::item::Item;
+use crate::item::item::Item;
 use super::Entity;
 
 #[derive(Debug)]

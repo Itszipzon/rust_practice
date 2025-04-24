@@ -1,5 +1,5 @@
 use entity::player::Player;
-use item::equipment::Equipment;
+use item::equipment::equipment::Equipment;
 use items::{list::ItemList, sword::Sword};
 
 mod item;
