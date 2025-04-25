@@ -3,6 +3,8 @@ mod items;
 mod entity;
 mod page;
 
+use std::vec;
+
 use eframe::egui;
 use entity::player::Player;
 use items::sword::Sword;
@@ -12,8 +14,11 @@ use page::pages::loading::LoadingPage;
 use page::pages::settings::SettingsPage;
 
 fn main() -> Result<(), eframe::Error> {
-    let sword = Sword::stone_sword(Some(250));
-    println!("Sword: {:?}", sword);
+    let wooden_sword = Sword::wooden_sword(Some(100));
+    let stone_sword = Sword::stone_sword(Some(250));
+    let iron_sword = Sword::iron_sword(Some(500));
+    let swords = vec![wooden_sword, stone_sword, iron_sword];
+    println!("Sword: {:#?}", swords);
     let options = eframe::NativeOptions::default();
     eframe::run_native("Game", options, Box::new(|_cc| Box::new(App::default())))
 }
@@ -28,7 +33,7 @@ struct App {
 
 impl Default for App {
     fn default() -> Self {
-        let player = Player::new("Rune".to_string(), "Hero".to_string(), 10, 1, 100, 50);
+        let player = Player::new("Isaac".to_string(), "A crybaby".to_string(), 10, 1, 100, 50);
         Self {
             current_page: Page::Loading,
             player,
