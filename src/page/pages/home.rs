@@ -1,4 +1,4 @@
-use eframe::egui::{self, Context, Ui};
+use eframe::egui::{self, Context};
 use crate::entity::player::Player;
 
 pub struct HomePage {
