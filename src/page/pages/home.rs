@@ -1,5 +1,6 @@
 use eframe::egui::{self, Context};
 use crate::entity::player::Player;
+use crate::settings::Settings;
 
 pub struct HomePage {
 }
@@ -9,7 +10,7 @@ impl HomePage {
         HomePage { }
     }
 
-    pub fn show(&mut self, ctx: &Context, player: &mut Player) {
+    pub fn show(&mut self, ctx: &Context, player: &mut Player, settings: &mut Settings) {
         egui::CentralPanel::default().show(ctx, |ui| {
             ui.heading("Welcome to the Home Page!");
             ui.label(format!("Player Name: {}", player.name));
