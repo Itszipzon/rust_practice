@@ -9,6 +9,8 @@ use item::equipment::equipment::Equipment;
 use items::{list::ItemList, sword::Sword};
 use page::page::Page;
 use page::pages::home::HomePage;
+use page::pages::loading::LoadingPage;
+use page::pages::settings::SettingsPage;
 
 fn main() -> Result<(), eframe::Error> {
     let options = eframe::NativeOptions::default();
@@ -16,15 +18,22 @@ fn main() -> Result<(), eframe::Error> {
 }
 
 struct App {
+    player: Player,
     current_page: Page,
+    loading_page: LoadingPage,
     home_page: HomePage,
+    settings_page: SettingsPage,
 }
 
 impl Default for App {
     fn default() -> Self {
+        let player = Player::new("Rune".to_string(), "Hero".to_string(), 10, 1, 100, 50);
         Self {
             current_page: Page::Loading,
-            home_page: HomePage::new(Player::new("Rune".to_string(), "Hero".to_string(), 10, 1, 100, 50)),
+            player,
+            loading_page: LoadingPage::new(),
+            home_page: HomePage::new(),
+            settings_page: SettingsPage::new(),
         }
     }
 }
@@ -47,15 +56,9 @@ impl eframe::App for App {
 
         egui::CentralPanel::default().show(ctx, |ui| {
             match self.current_page {
-                Page::Loading => {
-                    ui.heading("Welcome to the Loading Page");
-                    ui.label("Some home page content.");
-                }
-                Page::Home => {self.home_page.show(ctx);}
-                Page::Settings => {
-                    ui.heading("Settings");
-                    ui.label("Adjust your preferences here.");
-                }
+                Page::Loading => {self.loading_page.show(ctx, &mut self.player);}
+                Page::Home => {self.home_page.show(ctx, &mut self.player);}
+                Page::Settings => {self.settings_page.show(ctx, &mut self.player);}
             }
         });
     }
