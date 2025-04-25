@@ -11,7 +11,7 @@ impl SettingsPage {
 
     pub fn show(&mut self, ctx: &Context, player: &mut Player) {
         egui::CentralPanel::default().show(ctx, |ui| {
-          ui.heading("Settings");
+          ui.heading(format!("{}'s Settings", player.name));
           ui.label("Adjust your preferences here.");
         });
     }

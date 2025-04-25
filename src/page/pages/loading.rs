@@ -12,7 +12,7 @@ impl LoadingPage {
     pub fn show(&mut self, ctx: &Context, player: &mut Player) {
         egui::CentralPanel::default().show(ctx, |ui| {
             ui.heading("Welcome to the Loading Page");
-            ui.label("Some home page content.");
+            ui.label(format!("Loading game for player: {}", player.name));
         });
     }
 }
