@@ -1,83 +1,62 @@
-use entity::player::Player;
-use item::equipment::equipment::Equipment;
-use items::{list::ItemList, sword::Sword};
-
 mod item;
 mod items;
 mod entity;
+mod page;
 
-fn main() {
-    println!("========= Generating Player =========");
-    let mut player = Player::new(
-        "Hero".to_string(),
-        "A brave hero".to_string(),
-        10,
-        1,
-        100,
-        50,
-    );
+use eframe::egui;
+use entity::player::Player;
+use item::equipment::equipment::Equipment;
+use items::{list::ItemList, sword::Sword};
+use page::page::Page;
+use page::pages::home::HomePage;
 
-    println!("Player: {:?}", player);
+fn main() -> Result<(), eframe::Error> {
+    let options = eframe::NativeOptions::default();
+    eframe::run_native("Game", options, Box::new(|_cc| Box::new(App::default())))
+}
 
-    println!("========= Generating Sword =========");
-    let mut iron_sword = Sword::new(
-        "A sharp iron sword".to_string(),
-        15,
-        5,
-        145,
-        ItemList::IronSword
-    );
+struct App {
+    current_page: Page,
+    home_page: HomePage,
+}
 
-    println!("Sword: {:?}", iron_sword);
-
-    iron_sword.as_item_mut().unwrap().set_name("God Sword!".to_string());
-
-    println!("========= Adding Sword to Player Inventory =========");
-    player.add_item(Box::new(iron_sword));
-    println!("Player: {:?}", player);
-
-    println!("========= Spawning Zombie =========");
-    let mut zombie = entity::zombie::Zombie::new(
-        1,
-        "Zombie".to_string(),
-        "A scary zombie".to_string(),
-        65,
-        5,
-    );
-    println!("Zombie: {:?}", zombie);
-
-    println!("========= Start fight between Player and Zombie =========");
-    println!("{:?}", player);
-    println!("{:?}", zombie);
-    println!("========= Fight =========");
-    while player.is_alive() && zombie.is_alive() {
-        println!("Player attacks Zombie!");
-        let damage = player.attack();
-        zombie.take_damage(damage);
-        println!("Zombie takes {} damage!", damage);
-        println!("Zombie health: {}", zombie.get_health());
-
-        println!("Weapon durability: {}", player.inventory[player.active_item as usize].as_ref().unwrap().as_equipment().unwrap().as_weapon().unwrap().durability());
-
-        if !zombie.is_alive() {
-            println!("Zombie is dead!");
-            break;
-        }
-
-        println!("Zombie attacks Player!");
-        let damage = zombie.attack();
-        player.take_damage(damage);
-        println!("Player takes {} damage!", damage);
-        println!("Player health: {}", player.get_health());
-
-        if !player.is_alive() {
-            println!("Player is dead!");
-            break;
+impl Default for App {
+    fn default() -> Self {
+        Self {
+            current_page: Page::Loading,
+            home_page: HomePage::new(Player::new("Rune".to_string(), "Hero".to_string(), 10, 1, 100, 50)),
         }
     }
+}
 
-    println!("========= End fight =========");
-    println!("{:?}", zombie);
-    println!("{:?}", player);
-    println!("========= End of Game =========");
+impl eframe::App for App {
+    fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
+        egui::TopBottomPanel::top("top_panel").show(ctx, |ui| {
+            ui.horizontal(|ui| {
+                if ui.button("Loading").clicked() {
+                    self.current_page = Page::Loading;
+                }
+                if ui.button("Home").clicked() {
+                    self.current_page = Page::Home;
+                }
+                if ui.button("About").clicked() {
+                    self.current_page = Page::Settings;
+                }
+            });
+        });
+
+        egui::CentralPanel::default().show(ctx, |ui| {
+            match self.current_page {
+                Page::Loading => {
+                    ui.heading("Welcome to the Loading Page");
+                    ui.label("Some home page content.");
+                }
+                Page::Home => {self.home_page.show(ctx);}
+                Page::Settings => {
+                    ui.heading("Settings");
+                    ui.label("Adjust your preferences here.");
+                }
+            }
+        });
+    }
 }
