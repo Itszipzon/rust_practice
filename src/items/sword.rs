@@ -13,22 +13,120 @@ pub struct Sword {
     description: String,
     damage: u32,
     range: u32,
+    max_durability: u32,
     durability: u32,
     item_type: ItemList,
 }
 
 impl Sword {
-    pub fn new(description: String, damage: u32, range: u32, durability: u32, item_type: ItemList) -> Self {
+    pub fn new(description: String, damage: u32, range: u32, max_durability: u32, durability: u32, item_type: ItemList) -> Self {
         Sword {
-            display_name: item_type.name().to_owned(),
-            name: item_type.name().to_owned(),
+            display_name: item_type.name().to_string(),
+            name: item_type.name().to_string(),
             description,
             damage,
             range,
+            max_durability,
             durability,
             item_type,
             id: item_type.id(),
         }
+    }
+
+    /// Creates a new Wooden Sword instance with the given durability.
+    /// If no durability is provided, it defaults to 100.
+    /// # Arguments
+    /// * `durability` - An optional u32 representing the durability of the sword. None means default durability.
+    /// # Values
+    /// * `damage`: 10
+    /// * `range`: 1
+    /// * `max_durability`: 100
+    /// * `durability`: 100 (default)
+    /// # Returns
+    /// A new Sword instance with the specified durability.
+    /// # Examples
+    /// ```
+    /// let sword = Sword::wooden_sword(None); // Defaults to 100 durability
+    /// let sword = Sword::wooden_sword(Some(75)); // 75 durability
+    /// ```
+    pub fn wooden_sword(durability: Option<u32>) -> Self {
+        let max_durability = 100;
+        let mut durability = durability.unwrap_or(max_durability);
+        if durability > max_durability {
+            durability = max_durability;
+        }
+        Sword::new(
+            "A sturdy wooden sword.".to_string(),
+            10,
+            1,
+            max_durability,
+            durability,
+            ItemList::WoodenSword,
+        )
+    }
+
+    /// Creates a new Stone Sword instance with the given durability.
+    /// If no durability is provided, it defaults to 150.
+    /// # Arguments
+    /// * `durability` - An optional u32 representing the durability of the sword. None means default durability.
+    /// # Values
+    /// * `damage`: 12
+    /// * `range`: 1
+    /// * `max_durability`: 150
+    /// * `durability`: 150 (default)
+    /// # Returns
+    /// A new Sword instance with the specified durability.
+    /// # Examples
+    /// ```
+    /// let sword = Sword::stone_sword(None); // Defaults to 150 durability
+    /// let sword = Sword::stone_sword(Some(100)); // 100 durability
+    /// ```
+    pub fn stone_sword(durability: Option<u32>) -> Self {
+        let max_durability = 150;
+        let mut durability = durability.unwrap_or(max_durability);
+        if durability > max_durability {
+            durability = max_durability;
+        }
+        Sword::new(
+            "A sturdy stone sword.".to_string(),
+            12,
+            1,
+            max_durability,
+            durability,
+            ItemList::StoneSword,
+        )
+    }
+
+    /// Creates a new Iron Sword instance with the given durability.
+    /// If no durability is provided, it defaults to 250.
+    /// # Arguments
+    /// * `durability` - An optional u32 representing the durability of the sword. None means default durability.
+    /// # Values
+    /// * `damage`: 15
+    /// * `range`: 1
+    /// * `max_durability`: 250
+    /// * `durability`: 250 (default)
+    /// # Returns
+    /// A new Sword instance with the specified durability.
+    /// # Examples
+    /// ```
+    /// let sword = Sword::iron_sword(None); // Defaults to 100 durability
+    /// let sword = Sword::iron_sword(Some(150)); // 150 durability
+    /// ```
+    pub fn iron_sword(durability: Option<u32>) -> Self {
+        let mut durability = durability.unwrap_or(250);
+        let max_durability = 250;
+        if durability > max_durability {
+            durability = max_durability;
+        }
+        Sword::new(
+            "A sturdy iron sword.".to_string(),
+            15,
+            1,
+            max_durability,
+            durability,
+            ItemList::IronSword,
+        )
     }
 }
 
@@ -109,6 +207,10 @@ impl Equipment for Sword {
     fn as_tool_mut(&mut self) -> Option<&mut dyn crate::item::equipment::equipment_type::equipment_type::Tool> {
         None
     }
+    
+    fn max_durability(&self) -> u32 {
+        self.max_durability
+    }
 }
 
 impl Item for Sword {
@@ -134,5 +236,9 @@ impl Item for Sword {
     
     fn as_equipment_mut(&mut self) -> Option<&mut dyn Equipment> {
         Some(self as &mut dyn Equipment)
+    }
+    
+    fn item_type (&self) -> ItemList {
+        self.item_type.clone()
     }
 }

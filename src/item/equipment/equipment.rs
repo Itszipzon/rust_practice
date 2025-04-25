@@ -9,6 +9,7 @@ pub trait Equipment: Item {
     fn name(&self) -> String;
     fn equipment_type(&self) -> String;
     fn durability(&self) -> u32;
+    fn max_durability(&self) -> u32;
 
     fn as_item(&self) -> Option<&dyn Item>;
     fn as_item_mut(&mut self) -> Option<&mut dyn Item>;

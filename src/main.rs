@@ -5,14 +5,15 @@ mod page;
 
 use eframe::egui;
 use entity::player::Player;
-use item::equipment::equipment::Equipment;
-use items::{list::ItemList, sword::Sword};
+use items::sword::Sword;
 use page::page::Page;
 use page::pages::home::HomePage;
 use page::pages::loading::LoadingPage;
 use page::pages::settings::SettingsPage;
 
 fn main() -> Result<(), eframe::Error> {
+    let sword = Sword::stone_sword(Some(250));
+    println!("Sword: {:?}", sword);
     let options = eframe::NativeOptions::default();
     eframe::run_native("Game", options, Box::new(|_cc| Box::new(App::default())))
 }
@@ -40,6 +41,19 @@ impl Default for App {
 
 impl eframe::App for App {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
+        
+        
+        let mut style: egui::Style = (*ctx.style()).clone();
+
+        style.text_styles = [
+            (egui::TextStyle::Heading, egui::FontId::new(30.0, egui::FontFamily::Proportional)),
+            (egui::TextStyle::Body, egui::FontId::new(20.0, egui::FontFamily::Proportional)),
+            (egui::TextStyle::Button, egui::FontId::new(15.0, egui::FontFamily::Proportional)),
+        ]
+        .into();
+
+        ctx.set_style(style);
+
         egui::TopBottomPanel::top("top_panel").show(ctx, |ui| {
             ui.horizontal(|ui| {
                 if ui.button("Loading").clicked() {
@@ -54,7 +68,7 @@ impl eframe::App for App {
             });
         });
 
-        egui::CentralPanel::default().show(ctx, |ui| {
+        egui::CentralPanel::default().show(ctx, |_ui| {
             match self.current_page {
                 Page::Loading => {self.loading_page.show(ctx, &mut self.player);}
                 Page::Home => {self.home_page.show(ctx, &mut self.player);}
