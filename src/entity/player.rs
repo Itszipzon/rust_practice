@@ -1,5 +1,5 @@
-use crate::item::item::Item;
 use super::Entity;
+use crate::item::item::Item;
 
 #[derive(Debug)]
 pub struct Player {
@@ -15,9 +15,15 @@ pub struct Player {
 }
 
 impl Player {
-    pub fn new(name: String, description: String, default_damage: u32, level: u32, health: u32, mana: u32) -> Self {
-
-      let inventory = (0..50).map(|_| None).collect();
+    pub fn new(
+        name: String,
+        description: String,
+        default_damage: u32,
+        level: u32,
+        health: u32,
+        mana: u32,
+    ) -> Self {
+        let inventory = (0..50).map(|_| None).collect();
 
         Player {
             name,
@@ -38,39 +44,74 @@ impl Player {
         }
     }
 
-    pub fn remove_item(&mut self, item: &Box<dyn Item>) {
-      if (self.inventory.len() > 0) {
-        for i in 0..self.inventory.len() {
-          if let Some(inventory_item) = &self.inventory[i] {
-            if inventory_item.id() == item.id() && inventory_item.name() == item.name() && inventory_item.as_equipment().unwrap().as_item().unwrap().name() == item.as_equipment().unwrap().as_item().unwrap().name() {
-              self.inventory[i] = None;
-              break;
+    pub fn add_items(&mut self, items: Vec<Box<dyn Item>>) {
+        for item in items {
+            if let Some(index) = self.next_non_null_inventory_index() {
+                self.inventory[index] = Some(item);
             }
-          }
         }
-      }
     }
 
-    pub fn move_item(&mut self, item: &Box<dyn Item>, old_index: usize, new_index: usize) {
-      if (new_index < self.inventory.len()) {
-        if (self.inventory.get(new_index).is_none()) {
-          self.inventory[new_index] = self.inventory[old_index].take();
-          self.inventory.remove(old_index);
-        } else {
-          let positional_item = &self.inventory[new_index];
+    pub fn remove_item(&mut self, item: &Box<dyn Item>) {
+        if (self.inventory.len() > 0) {
+            for i in 0..self.inventory.len() {
+                if let Some(inventory_item) = &self.inventory[i] {
+                    if inventory_item.id() == item.id()
+                        && inventory_item.name() == item.name()
+                        && inventory_item
+                            .as_equipment()
+                            .unwrap()
+                            .as_item()
+                            .unwrap()
+                            .name()
+                            == item.as_equipment().unwrap().as_item().unwrap().name()
+                    {
+                        self.inventory[i] = None;
+                        break;
+                    }
+                }
+            }
         }
-      }
+    }
+
+    pub fn move_item(&mut self, old_index: usize, new_index: usize) {
+        if old_index >= self.inventory.len() || new_index >= self.inventory.len() {
+            println!("Index out of bounds!");
+            return;
+        }
+    
+        if self.inventory[new_index].is_none() {
+            println!("Moving item from {} to {}", old_index, new_index);
+            self.inventory[new_index] = self.inventory[old_index].take();
+        } else {
+            println!("Item already exists at index {}", new_index);
+            self.inventory.swap(old_index, new_index);
+        }
     }
 
     pub fn attack(&mut self) -> u32 {
-      if (self.active_is_weapon()) {
-        let weapon = &mut self.inventory[self.active_item as usize];
-        weapon.as_mut().unwrap().as_equipment_mut().unwrap().as_weapon_mut().unwrap().on_use();
-          return self.default_damage + weapon.as_mut().unwrap().as_equipment_mut().unwrap().as_weapon_mut().unwrap().damage();
-      }
+        if (self.active_is_weapon()) {
+            let weapon = &mut self.inventory[self.active_item as usize];
+            weapon
+                .as_mut()
+                .unwrap()
+                .as_equipment_mut()
+                .unwrap()
+                .as_weapon_mut()
+                .unwrap()
+                .on_use();
+            return self.default_damage
+                + weapon
+                    .as_mut()
+                    .unwrap()
+                    .as_equipment_mut()
+                    .unwrap()
+                    .as_weapon_mut()
+                    .unwrap()
+                    .damage();
+        }
 
-      self.default_damage
-        
+        self.default_damage
     }
 
     pub fn take_damage(&mut self, damage: u32) {
@@ -111,7 +152,14 @@ impl Player {
     fn active_is_weapon(&self) -> bool {
         if self.inventory.len() > 0 {
             let item = &self.inventory[self.active_item as usize];
-            if (item.as_ref().unwrap().as_equipment().unwrap().as_weapon().is_some()) {
+            if (item
+                .as_ref()
+                .unwrap()
+                .as_equipment()
+                .unwrap()
+                .as_weapon()
+                .is_some())
+            {
                 return true;
             }
         }
@@ -126,8 +174,6 @@ impl Player {
         }
         None
     }
-
-
 }
 
 impl Entity for Player {
