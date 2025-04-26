@@ -18,6 +18,7 @@ impl Settings {
     }
 
     pub fn save(&self) {
+        println!("Saving settings to {:?}", Self::config_path());
         if let Ok(content) = toml::to_string_pretty(self) {
             let path = Self::config_path();
             if let Some(parent) = path.parent() {
