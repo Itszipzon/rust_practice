@@ -6,7 +6,7 @@ use super::equipment_type::equipment_type::Tool;
 
 
 pub trait Equipment: Item {
-    fn name(&self) -> String;
+    fn dispaly_name(&self) -> String;
     fn equipment_type(&self) -> String;
     fn durability(&self) -> u32;
     fn max_durability(&self) -> u32;
