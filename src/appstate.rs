@@ -13,17 +13,24 @@ pub struct AppState {
 
 impl AppState {
   pub fn new() -> Self {
-    let mut player = Player::new("Hero".to_string(), "A brave hero.".to_string(), 10, 1, 100, 100);
+    let mut player = Player::new(
+      "Hero".to_string(),
+      "A brave hero.".to_string(),
+      10,
+      1,
+      100,
+      100,
+    );
     let wooden_sword = Sword::wooden_sword(Some(100));
     let stone_sword = Sword::stone_sword(Some(250));
     let iron_sword = Sword::iron_sword(Some(500));
-    
+
     let swords: Vec<Box<dyn Item>> = vec![
       Box::new(wooden_sword),
       Box::new(stone_sword),
       Box::new(iron_sword),
     ];
-    
+
     player.add_items(swords);
 
     println!("{:#?}", player.inventory);

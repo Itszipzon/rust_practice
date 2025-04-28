@@ -1,6 +1,6 @@
 #[derive(Debug, Clone)]
 pub enum Page {
-    Loading,
-    Home,
-    Settings,
+  Loading,
+  Home,
+  Settings,
 }
