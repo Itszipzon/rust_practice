@@ -5,7 +5,7 @@ use crate::item::{
 
 use super::list::ItemList;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Sword {
     id: u32,
     name: String,
@@ -240,5 +240,9 @@ impl Item for Sword {
     
     fn item_type (&self) -> ItemList {
         self.item_type.clone()
+    }
+    
+    fn clone_box(&self) -> Box<dyn Item> {
+        Box::new(self.clone())
     }
 }

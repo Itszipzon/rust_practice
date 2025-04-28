@@ -1,7 +1,7 @@
 use super::Entity;
 use crate::item::item::Item;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Player {
     pub name: String,
     pub description: String,

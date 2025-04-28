@@ -4,7 +4,6 @@ use super::equipment_type::equipment_type::Weapon;
 use super::equipment_type::equipment_type::Shield;
 use super::equipment_type::equipment_type::Tool;
 
-
 pub trait Equipment: Item {
     fn dispaly_name(&self) -> String;
     fn equipment_type(&self) -> String;

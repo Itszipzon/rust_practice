@@ -4,6 +4,7 @@ use std::vec;
 
 use crate::items::sword::Sword;
 
+#[derive(Debug, Clone)]
 pub struct AppState {
   pub player: Player,
   pub settings: Settings,
