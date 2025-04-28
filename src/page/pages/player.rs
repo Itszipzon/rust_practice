@@ -47,10 +47,8 @@ impl PlayerPage {
 
       ui.separator();
 
-      // Inventory Item Display
       if let Some(slot) = app_state.player.inventory.get(self.current_index) {
         if let Some(item) = slot {
-          // Display the item fields nicely
           ui.group(|ui| {
             ui.heading(&item.as_equipment().unwrap().dispaly_name());
             ui.label(format!("Name: {}", &item.name()));
@@ -64,7 +62,6 @@ impl PlayerPage {
             ui.label(format!("Type: {:?}", item.item_type()));
           });
         } else {
-          // Slot is None
           ui.label("Empty slot.");
         }
       } else {
@@ -73,7 +70,6 @@ impl PlayerPage {
 
       ui.separator();
 
-      // Navigation buttons
       if ui.button("Go to Settings").clicked() {
         app_state.current_page = Page::Settings;
       }
