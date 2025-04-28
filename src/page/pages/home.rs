@@ -26,6 +26,9 @@ impl HomePage {
       ui.button("Go to Settings").clicked().then(|| {
         app_state.current_page = Page::Settings;
       });
+      ui.button("Go to Player").clicked().then(|| {
+        app_state.current_page = Page::Player;
+      });
     });
   }
 }

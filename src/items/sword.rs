@@ -142,7 +142,7 @@ impl Sword {
 }
 
 impl Weapon for Sword {
-  fn damage(&mut self) -> u32 {
+  fn damage(&self) -> u32 {
     self.damage
   }
 

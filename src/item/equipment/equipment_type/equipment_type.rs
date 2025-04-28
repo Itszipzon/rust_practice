@@ -9,7 +9,7 @@ pub trait Armor: Equipment {
 }
 
 pub trait Weapon: Equipment {
-  fn damage(&mut self) -> u32;
+  fn damage(&self) -> u32;
   fn range(&self) -> u32;
   fn on_use(&mut self) -> u32;
 

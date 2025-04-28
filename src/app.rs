@@ -3,6 +3,7 @@ use page::page::Page;
 use page::pages::home::HomePage;
 use page::pages::loading::LoadingPage;
 use page::pages::settings::SettingsPage;
+use page::pages::player::PlayerPage;
 
 use crate::{appstate, page};
 
@@ -11,6 +12,7 @@ pub struct App {
   loading_page: LoadingPage,
   home_page: HomePage,
   settings_page: SettingsPage,
+  player_page: PlayerPage,
 }
 
 impl App {
@@ -20,6 +22,7 @@ impl App {
       loading_page: LoadingPage::new(),
       home_page: HomePage::new(),
       settings_page: SettingsPage::new(),
+      player_page: PlayerPage::new(),
     }
   }
 }
@@ -67,6 +70,9 @@ impl eframe::App for App {
       }
       Page::Settings => {
         self.settings_page.show(ctx, &mut self.app_state);
+      }
+      Page::Player => {
+        self.player_page.show(ctx, &mut self.app_state);
       }
     });
   }
