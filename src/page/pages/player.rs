@@ -2,71 +2,84 @@ use crate::appstate::AppState;
 use crate::page::page::Page;
 use eframe::egui::{self, Context};
 
-pub struct PlayerPage {
-  current_index: usize,
-}
+pub struct PlayerPage {}
 
 impl PlayerPage {
   pub fn new() -> Self {
-    PlayerPage { current_index: 0 }
+    PlayerPage {  }
   }
 
   pub fn show(&mut self, ctx: &Context, app_state: &mut AppState) {
-
     egui::CentralPanel::default().show(ctx, |ui| {
       ui.heading(format!("{}'s Player Page", app_state.player.name));
       ui.label(format!("Player Name: {}", app_state.player.name));
 
       ui.separator();
 
-      // Inventory Navigation
-      ui.horizontal(|ui| {
-        if ui
-          .add_enabled(self.current_index > 0, egui::Button::new("< Left"))
-          .clicked()
-        {
-          self.current_index -= 1;
-        }
+      let columns = 10;
+      let rows = 5;
+      let slot_size = 50.0;
 
-        ui.label(format!(
-          "Item {}/{}",
-          self.current_index + 1,
-          app_state.player.inventory.len()
-        ));
+      ui.vertical_centered(|ui| {
+        egui::Grid::new("inventory_grid")
+          .spacing([10.0, 10.0]) // spacing between cells
+          .show(ui, |ui| {
+            for row in 0..rows {
+              for col in 0..columns {
+                let index = row * columns + col;
+                if let Some(slot) = app_state.player.inventory.get(index) {
+                  if let Some(item) = slot {
+                    // Get display name
+                    let display_name = item
+                      .as_equipment()
+                      .map(|eq| eq.dispaly_name())
+                      .unwrap_or_else(|| item.name());
 
-        if ui
-          .add_enabled(
-            self.current_index + 1 < app_state.player.inventory.len(),
-            egui::Button::new("Right >"),
-          )
-          .clicked()
-        {
-          self.current_index += 1;
-        }
-      });
+                    let truncated_name = if display_name.len() > 6 {
+                      format!("{}...", &display_name[..3])
+                    } else {
+                      display_name
+                    };
 
-      ui.separator();
+                    let response =
+                      ui.add_sized([slot_size, slot_size], egui::Button::new(truncated_name).min_size([slot_size, slot_size].into()));
 
-      if let Some(slot) = app_state.player.inventory.get(self.current_index) {
-        if let Some(item) = slot {
-          ui.group(|ui| {
-            ui.heading(&item.as_equipment().unwrap().dispaly_name());
-            ui.label(format!("Name: {}", &item.name()));
-            ui.label(format!("Description: {}", &item.as_equipment().unwrap().description()));
-            ui.label(format!("Damage: {}", &item.as_equipment().unwrap().as_weapon().unwrap().damage()));
-            ui.label(format!("Range: {}", &item.as_equipment().unwrap().as_weapon().unwrap().range()));
-            ui.label(format!(
-              "Durability: {}/{}",
-              item.as_equipment().unwrap().durability(), item.as_equipment().unwrap().max_durability()
-            ));
-            ui.label(format!("Type: {:?}", item.item_type()));
+                    if response.hovered() {
+                      // Tooltip on hover
+                      egui::show_tooltip_at_pointer(
+                        ctx,
+                        egui::Id::new(format!("tooltip_{}", index)),
+                        |ui| {
+                          ui.vertical(|ui| {
+                            if let Some(equip) = item.as_equipment() {
+                              ui.heading(equip.dispaly_name());
+                              ui.label(format!("Description: {}", equip.description()));
+                              ui.label(format!(
+                                "Durability: {}/{}",
+                                equip.durability(),
+                                equip.max_durability()
+                              ));
+                              if let Some(weapon) = equip.as_weapon() {
+                                ui.label(format!("Damage: {}", weapon.damage()));
+                                ui.label(format!("Range: {}", weapon.range()));
+                              }
+                            }
+                            ui.label(format!("Type: {:?}", item.item_type()));
+                          });
+                        },
+                      );
+                    }
+                  } else {
+                    ui.add_sized([slot_size, slot_size], egui::Button::new(""));
+                  }
+                } else {
+                  ui.add_sized([slot_size, slot_size], egui::Button::new(""));
+                }
+              }
+              ui.end_row();
+            }
           });
-        } else {
-          ui.label("Empty slot.");
-        }
-      } else {
-        ui.label("Invalid inventory index!");
-      }
+      });
 
       ui.separator();
 
