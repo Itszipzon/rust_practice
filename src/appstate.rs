@@ -33,13 +33,13 @@ impl AppState {
 
     player.add_items(swords);
 
-    println!("{:#?}", player.inventory);
+/*     println!("{:#?}", player.inventory);
 
     player.move_item(0, 5);
     println!("{:#?}", player.inventory);
 
     player.move_item(1, 5);
-    println!("{:#?}", player.inventory);
+    println!("{:#?}", player.inventory); */
     AppState {
       player,
       settings: Settings::load(),
