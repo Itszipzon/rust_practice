@@ -18,15 +18,6 @@ impl Cow {
     }
   }
 
-  pub fn take_damage(&mut self, damage: u32) {
-    if damage >= self.health {
-      self.health = 0;
-      self.is_alive = false;
-    } else {
-      self.health -= damage;
-    }
-  }
-
   pub fn is_alive(&self) -> bool {
     self.is_alive
   }
@@ -51,6 +42,15 @@ impl Entity for Cow {
 
   fn health(&self) -> u32 {
     2
+  }
+
+  fn take_damage(&mut self, damage: u32) {
+    if damage >= self.health {
+      self.health = 0;
+      self.is_alive = false;
+    } else {
+      self.health -= damage;
+    }
   }
 
   fn damage(&self) -> u32 {

@@ -102,7 +102,7 @@ impl Player {
     }
   }
 
-  pub fn attack(&mut self) -> u32 {
+  pub fn attack(&mut self, mut target: impl Entity) -> u32 {
     if self.active_is_weapon() {
       let weapon = &mut self.inventory[self.active_item as usize];
       weapon
@@ -113,27 +113,20 @@ impl Player {
         .as_weapon_mut()
         .unwrap()
         .on_use();
-      return self.default_damage
-        + weapon
-          .as_mut()
-          .unwrap()
-          .as_equipment_mut()
-          .unwrap()
-          .as_weapon_mut()
-          .unwrap()
-          .damage();
+      let dmg = self.default_damage
+      + weapon
+        .as_mut()
+        .unwrap()
+        .as_equipment_mut()
+        .unwrap()
+        .as_weapon_mut()
+        .unwrap()
+        .damage();
+      target.take_damage(dmg);
+      return dmg;
     }
 
     self.default_damage
-  }
-
-  pub fn take_damage(&mut self, damage: u32) {
-    if damage >= self.health {
-      self.health = 0;
-      self.is_alive = false;
-    } else {
-      self.health -= damage;
-    }
   }
 
   pub fn set_health(&mut self, health: u32) {
@@ -194,6 +187,15 @@ impl Entity for Player {
 
   fn damage(&self) -> u32 {
     5
+  }
+
+  fn take_damage(&mut self, damage: u32) {
+    if damage >= self.health {
+      self.health = 0;
+      self.is_alive = false;
+    } else {
+      self.health -= damage;
+    }
   }
 
   fn entity_kind(&self) -> EntityKind {

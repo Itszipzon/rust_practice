@@ -18,17 +18,9 @@ impl Zombie {
     }
   }
 
-  pub fn attack(&self) -> u32 {
+  pub fn attack(&self, mut target: impl Entity) -> u32 {
+    target.take_damage(self.damage);
     self.damage
-  }
-
-  pub fn take_damage(&mut self, damage: u32) {
-    if damage >= self.health {
-      self.health = 0;
-      self.is_alive = false;
-    } else {
-      self.health -= damage;
-    }
   }
 
   pub fn is_alive(&self) -> bool {
@@ -59,6 +51,15 @@ impl Entity for Zombie {
 
   fn damage(&self) -> u32 {
     2
+  }
+
+  fn take_damage(&mut self, damage: u32) {
+    if damage >= self.health {
+      self.health = 0;
+      self.is_alive = false;
+    } else {
+      self.health -= damage;
+    }
   }
 
   fn entity_kind(&self) -> EntityKind {

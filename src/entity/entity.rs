@@ -9,5 +9,7 @@ pub trait Entity: Debug {
   fn hostile(&self) -> bool;
   fn health(&self) -> u32;
   fn damage(&self) -> u32;
+  fn take_damage(&mut self, damage: u32);
+
   fn entity_kind(&self) -> EntityKind;
 }

@@ -18,21 +18,17 @@ impl Skeleton {
     }
   }
 
-  pub fn take_damage(&mut self, damage: u32) {
-    if damage >= self.health {
-      self.health = 0;
-      self.is_alive = false;
-    } else {
-      self.health -= damage;
-    }
-  }
-
   pub fn is_alive(&self) -> bool {
     self.is_alive
   }
 
   pub fn get_health(&self) -> u32 {
     self.health
+  }
+
+  pub fn attack(&self, mut target: impl Entity) -> u32 {
+    target.take_damage(self.damage);
+    self.damage
   }
 }
 
@@ -51,6 +47,15 @@ impl Entity for Skeleton {
 
   fn health(&self) -> u32 {
     2
+  }
+
+  fn take_damage(&mut self, damage: u32) {
+    if damage >= self.health {
+      self.health = 0;
+      self.is_alive = false;
+    } else {
+      self.health -= damage;
+    }
   }
 
   fn damage(&self) -> u32 {

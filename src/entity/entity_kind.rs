@@ -41,6 +41,12 @@ macro_rules! entity_kind {
                 }
             }
 
+            fn take_damage(&mut self, damage: u32) {
+                match self {
+                    $( EntityKind::$variant(inner) => inner.take_damage(damage), )*
+                }
+            }
+
             fn entity_kind(&self) -> EntityKind {
                 match self {
                     $( EntityKind::$variant(inner) => EntityKind::$variant(inner.clone()), )*
