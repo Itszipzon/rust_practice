@@ -10,7 +10,8 @@ impl ToolTip {
   }
 
   pub fn show(&mut self, ctx: &Context, item: &Box<dyn Item>, index: usize) {
-    egui::show_tooltip_at_pointer(ctx, egui::Id::new(format!("tooltip_{}", index)), |ui| {
+    let layer_id = egui::LayerId::new(egui::Order::Foreground, egui::Id::new("tooltip_layer"));
+    egui::show_tooltip_at_pointer(ctx, layer_id, egui::Id::new(format!("tooltip_{}", index)), |ui| {
       ui.vertical(|ui| {
         let display_name = match item.item_type() {
           ItemType::Equipment => item.as_equipment().unwrap().display_name(),

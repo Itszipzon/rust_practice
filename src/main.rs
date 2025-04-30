@@ -14,6 +14,6 @@ fn main() -> Result<(), eframe::Error> {
   eframe::run_native(
     "Game",
     options,
-    Box::new(|_cc| Box::new(App::new(app_state))),
+    Box::new(|_cc| Ok(Box::new(App::new(app_state)))),
   )
 }
