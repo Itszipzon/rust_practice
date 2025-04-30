@@ -14,6 +14,7 @@ pub struct Player {
   pub inventory: Vec<Option<Box<dyn Item>>>,
   pub active_item: u32,
   pub is_alive: bool,
+  pub cursor_item: Option<Box<dyn Item>>,
 }
 
 impl Player {
@@ -37,6 +38,7 @@ impl Player {
       inventory,
       active_item: 0,
       is_alive: true,
+      cursor_item: None,
     }
   }
 
@@ -76,6 +78,10 @@ impl Player {
     }
   }
 
+  pub fn has_cursor_item(&self) -> bool {
+    self.cursor_item.is_some()
+  }
+
   pub fn move_item(&mut self, old_index: usize, new_index: usize) {
     if old_index >= self.inventory.len() || new_index >= self.inventory.len() {
       println!("Index out of bounds!");
@@ -88,6 +94,45 @@ impl Player {
     } else {
       println!("Item already exists at index {}", new_index);
       self.inventory.swap(old_index, new_index);
+    }
+  }
+
+  pub fn move_inventory_item_to_cursor(&mut self, index: usize) {
+    if let Some(item) = self.inventory[index].take() {
+      self.cursor_item = Some(item);
+    }
+  }
+
+  pub fn move_cursor_item_to_inventory(&mut self, index: usize) {
+    if index < self.inventory.len() {
+      if let Some(item) = self.cursor_item.take() {
+        if self.inventory[index].is_none() {
+          self.inventory[index] = Some(item);
+        } else {
+          let old_item = self.inventory[index].take();
+          self.inventory[index] = Some(item);
+          self.cursor_item = old_item;
+        }
+      }
+    }
+  }
+
+  pub fn click_inventory_item(&mut self, index: usize) {
+    if index < self.inventory.len() {
+      if let Some(item) = &self.inventory[index] {
+        if let Some(cursor_item) = &self.cursor_item {
+          if item.id() == cursor_item.id() {
+            self.inventory[index] = None;
+            self.cursor_item = None;
+          } else {
+            self.cursor_item = Some(item.clone());
+          }
+        } else {
+          self.cursor_item = Some(item.clone());
+        }
+      } else {
+        self.cursor_item = None;
+      }
     }
   }
 

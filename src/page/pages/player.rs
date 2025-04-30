@@ -23,41 +23,55 @@ impl PlayerPage {
 
       ui.vertical_centered(|ui| {
         egui::Grid::new("inventory_grid")
-          .spacing([10.0, 10.0]) // spacing between cells
+          .spacing([10.0, 10.0])
           .show(ui, |ui| {
             for row in 0..rows {
               for col in 0..columns {
                 let index = row * columns + col;
-                if let Some(slot) = app_state.player.inventory.get(index) {
-                  if let Some(item) = slot {
-                    
-                    // Get display name
-                    let display_name = match item.item_type() {
-                      ItemType::Equipment => item.as_equipment().unwrap().display_name(),
-                      ItemType::Placeable => item.as_placeable().unwrap().display_name(),
-                    };
 
-                    let truncated_name = if display_name.len() > 6 {
-                      format!("{}...", &display_name[..3])
-                    } else {
-                      display_name
-                    };
+                let maybe_item = app_state
+                  .player
+                  .inventory
+                  .get(index)
+                  .and_then(|slot| slot.as_ref())
+                  .map(|item| item.clone());
 
-                    let response = ui.add_sized(
-                      [slot_size, slot_size],
-                      egui::Button::new(truncated_name).min_size([slot_size, slot_size].into()),
-                    );
+                if let Some(item) = maybe_item {
+                  let display_name = match item.item_type() {
+                    ItemType::Equipment => item.as_equipment().unwrap().display_name(),
+                    ItemType::Placeable => item.as_placeable().unwrap().display_name(),
+                  };
 
-                    if response.hovered() {
-                      // Tooltip on hover
-                      let mut tooltip = ToolTip::new();
-                      tooltip.show(ctx, item, index);
-                    }
+                  let truncated_name = if display_name.len() > 6 {
+                    format!("{}...", &display_name[..3])
                   } else {
-                    ui.add_sized([slot_size, slot_size], egui::Button::new(""));
+                    display_name
+                  };
+
+                  let response = ui.add_sized(
+                    [slot_size, slot_size],
+                    egui::Button::new(truncated_name).min_size([slot_size, slot_size].into()),
+                  );
+
+                  if response.hovered() {
+                    let mut tooltip = ToolTip::new();
+                    tooltip.show(ctx, &item, index);
+                  }
+
+                  if response.clicked() {
+                    if app_state.player.has_cursor_item() {
+                      app_state.player.move_cursor_item_to_inventory(index);
+                    } else {
+                      app_state.player.move_inventory_item_to_cursor(index);
+                    }
                   }
                 } else {
-                  ui.add_sized([slot_size, slot_size], egui::Button::new(""));
+                  let response = ui.add_sized([slot_size, slot_size], egui::Button::new(""));
+                  if response.clicked() {
+                    if app_state.player.has_cursor_item() {
+                      app_state.player.move_cursor_item_to_inventory(index);
+                    }
+                  }
                 }
               }
               ui.end_row();
