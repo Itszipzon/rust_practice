@@ -152,29 +152,17 @@ impl Player {
   }
 
   fn active_is_weapon(&self) -> bool {
-    if self.inventory.len() > 0 {
-      let item = &self.inventory[self.active_item as usize];
-      if item
-        .as_ref()
-        .unwrap()
-        .as_equipment()
-        .unwrap()
-        .as_weapon()
-        .is_some()
-      {
-        return true;
-      }
-    }
-    false
+    self
+      .inventory
+      .get(self.active_item as usize)
+      .and_then(|item| item.as_ref())
+      .and_then(|item| item.as_equipment())
+      .and_then(|eq| eq.as_weapon())
+      .is_some()
   }
 
   fn next_non_null_inventory_index(&self) -> Option<usize> {
-    for i in 0..self.inventory.len() {
-      if self.inventory[i].is_none() {
-        return Some(i);
-      }
-    }
-    None
+    self.inventory.iter().position(|slot| slot.is_none())
   }
 }
 
