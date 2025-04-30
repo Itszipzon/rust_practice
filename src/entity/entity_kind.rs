@@ -1,4 +1,7 @@
-use super::{entities::{chicken::Chicken, cow::Cow, player::Player, skeleton::Skeleton, zombie::Zombie}, entity::Entity};
+use super::{
+  entities::{chicken::Chicken, cow::Cow, player::Player, skeleton::Skeleton, zombie::Zombie},
+  entity::Entity,
+};
 
 macro_rules! entity_kind {
     ( $( $variant:ident => $type:path ),* $(,)? ) => {
