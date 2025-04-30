@@ -1,7 +1,6 @@
-use crate::item::item_type::ItemType;
+use crate::page::elements::player_inventory::PlayerInventory;
 use crate::page::page::Page;
-use crate::{appstate::AppState, page::elements::tooltip::ToolTip};
-use std::time::{Duration, Instant};
+use crate::appstate::AppState;
 use eframe::egui::{self, Context};
 
 pub struct PlayerPage {}
@@ -12,93 +11,11 @@ impl PlayerPage {
   }
 
   pub fn show(&mut self, ctx: &Context, app_state: &mut AppState) {
-    let input = ctx.input(|i| i.clone());
     egui::CentralPanel::default().show(ctx, |ui| {
       ui.heading(format!("{}'s Player Page", app_state.player.name));
       ui.label(format!("Player Name: {}", app_state.player.name));
 
-      ui.separator();
-
-      let columns = 10;
-      let rows = 5;
-      let slot_size = 50.0;
-
-      ui.vertical_centered(|ui| {
-        egui::Grid::new("inventory_grid")
-          .spacing([10.0, 10.0])
-          .show(ui, |ui| {
-            for row in 0..rows {
-              for col in 0..columns {
-                let index = row * columns + col;
-
-                let maybe_item = app_state
-                  .player
-                  .inventory
-                  .get(index)
-                  .and_then(|slot| slot.as_ref())
-                  .map(|item| item.clone());
-
-                if let Some(item) = maybe_item {
-                  let display_name = match item.item_type() {
-                    ItemType::Equipment => item.as_equipment().unwrap().display_name(),
-                    ItemType::Placeable => item.as_placeable().unwrap().display_name(),
-                  };
-
-                  let truncated_name = if display_name.len() > 6 {
-                    format!("{}...", &display_name[..3])
-                  } else {
-                    display_name
-                  };
-
-                  let response = ui.add_sized(
-                    [slot_size, slot_size],
-                    egui::Button::new(truncated_name).min_size([slot_size, slot_size].into()),
-                  );
-
-                  if response.hovered() {
-                    let mut tooltip = ToolTip::new();
-                    tooltip.show(ctx, &item, index);
-                  }
-
-                  if response.clicked() {
-                    if app_state.player.has_cursor_item() {
-                      app_state.player.move_cursor_item_to_inventory(index);
-                    } else {
-                      app_state.player.move_inventory_item_to_cursor(index);
-                    }
-                  }
-                } else {
-                  let response = ui.add_sized([slot_size, slot_size], egui::Button::new(""));
-                  if response.clicked() {
-                    if app_state.player.has_cursor_item() {
-                      app_state.player.move_cursor_item_to_inventory(index);
-                    }
-                  }
-                }                
-                for (i, key) in [
-                  egui::Key::Num1,
-                  egui::Key::Num2,
-                  egui::Key::Num3,
-                  egui::Key::Num4,
-                  egui::Key::Num5,
-                  egui::Key::Num6,
-                  egui::Key::Num7,
-                  egui::Key::Num8,
-                  egui::Key::Num9,
-                  egui::Key::Num0,
-                ]
-                .iter()
-                .enumerate()
-                {
-                  if input.key_pressed(*key) && app_state.player.has_cursor_item() {
-                    app_state.player.move_cursor_item_to_inventory(i);
-                  }
-                }
-              }
-              ui.end_row();
-            }
-          });
-      });
+      PlayerInventory::new().show(ctx, ui, app_state);
 
       ui.separator();
 
