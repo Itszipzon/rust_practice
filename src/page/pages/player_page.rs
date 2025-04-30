@@ -1,6 +1,7 @@
 use crate::item::item_type::ItemType;
 use crate::page::page::Page;
 use crate::{appstate::AppState, page::elements::tooltip::ToolTip};
+use std::time::{Duration, Instant};
 use eframe::egui::{self, Context};
 
 pub struct PlayerPage {}
@@ -11,6 +12,7 @@ impl PlayerPage {
   }
 
   pub fn show(&mut self, ctx: &Context, app_state: &mut AppState) {
+    let input = ctx.input(|i| i.clone());
     egui::CentralPanel::default().show(ctx, |ui| {
       ui.heading(format!("{}'s Player Page", app_state.player.name));
       ui.label(format!("Player Name: {}", app_state.player.name));
@@ -71,6 +73,25 @@ impl PlayerPage {
                     if app_state.player.has_cursor_item() {
                       app_state.player.move_cursor_item_to_inventory(index);
                     }
+                  }
+                }                
+                for (i, key) in [
+                  egui::Key::Num1,
+                  egui::Key::Num2,
+                  egui::Key::Num3,
+                  egui::Key::Num4,
+                  egui::Key::Num5,
+                  egui::Key::Num6,
+                  egui::Key::Num7,
+                  egui::Key::Num8,
+                  egui::Key::Num9,
+                  egui::Key::Num0,
+                ]
+                .iter()
+                .enumerate()
+                {
+                  if input.key_pressed(*key) && app_state.player.has_cursor_item() {
+                    app_state.player.move_cursor_item_to_inventory(i);
                   }
                 }
               }

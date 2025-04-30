@@ -3,7 +3,7 @@ use page::page::Page;
 use page::pages::home::HomePage;
 use page::pages::loading::LoadingPage;
 use page::pages::settings::SettingsPage;
-use page::pages::player::PlayerPage;
+use page::pages::player_page::PlayerPage;
 
 use crate::{appstate, page};
 
