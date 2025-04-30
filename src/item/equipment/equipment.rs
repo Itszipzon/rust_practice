@@ -5,7 +5,7 @@ use super::equipment_type::equipment_type::Weapon;
 use crate::item::item::Item;
 
 pub trait Equipment: Item {
-  fn dispaly_name(&self) -> String;
+  fn display_name(&self) -> String;
   fn equipment_type(&self) -> String;
   fn durability(&self) -> u32;
   fn max_durability(&self) -> u32;

@@ -1,10 +1,8 @@
 use crate::item::{
   equipment::{
-    equipment::Equipment, equipment_type::equipment_type::Armor,
-    equipment_type::equipment_type::Shield, equipment_type::equipment_type::Tool,
-    equipment_type::equipment_type::Weapon,
+    equipment::Equipment, equipment_type::equipment_type::{Armor, Shield, Tool, Weapon},
   },
-  item::Item,
+  item::Item, item_type::ItemType,
 };
 
 use super::list::ItemList;
@@ -167,7 +165,7 @@ impl Weapon for Sword {
 }
 
 impl Equipment for Sword {
-  fn dispaly_name(&self) -> String {
+  fn display_name(&self) -> String {
     self.name.clone()
   }
 
@@ -249,11 +247,23 @@ impl Item for Sword {
     Some(self as &mut dyn Equipment)
   }
 
-  fn item_type(&self) -> ItemList {
+  fn item(&self) -> ItemList {
     self.item_type.clone()
+  }
+
+  fn item_type(&self) -> ItemType {
+    ItemType::Equipment
   }
 
   fn clone_box(&self) -> Box<dyn Item> {
     Box::new(self.clone())
   }
+  
+  fn as_placeable(&self) -> Option<&dyn crate::item::placeable::placeable::Placeable> {
+        None
+    }
+  
+  fn as_placeable_mut(&mut self) -> Option<&mut dyn crate::item::placeable::placeable::Placeable> {
+        None
+    }
 }

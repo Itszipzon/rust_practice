@@ -1,12 +1,13 @@
-use crate::{appstate::AppState, page::elements::tooltip::ToolTip};
+use crate::item::item_type::ItemType;
 use crate::page::page::Page;
+use crate::{appstate::AppState, page::elements::tooltip::ToolTip};
 use eframe::egui::{self, Context};
 
 pub struct PlayerPage {}
 
 impl PlayerPage {
   pub fn new() -> Self {
-    PlayerPage {  }
+    PlayerPage {}
   }
 
   pub fn show(&mut self, ctx: &Context, app_state: &mut AppState) {
@@ -29,11 +30,12 @@ impl PlayerPage {
                 let index = row * columns + col;
                 if let Some(slot) = app_state.player.inventory.get(index) {
                   if let Some(item) = slot {
+                    
                     // Get display name
-                    let display_name = item
-                      .as_equipment()
-                      .map(|eq| eq.dispaly_name())
-                      .unwrap_or_else(|| item.name());
+                    let display_name = match item.item_type() {
+                      ItemType::Equipment => item.as_equipment().unwrap().display_name(),
+                      ItemType::Placeable => item.as_placeable().unwrap().display_name(),
+                    };
 
                     let truncated_name = if display_name.len() > 6 {
                       format!("{}...", &display_name[..3])
@@ -41,8 +43,10 @@ impl PlayerPage {
                       display_name
                     };
 
-                    let response =
-                      ui.add_sized([slot_size, slot_size], egui::Button::new(truncated_name).min_size([slot_size, slot_size].into()));
+                    let response = ui.add_sized(
+                      [slot_size, slot_size],
+                      egui::Button::new(truncated_name).min_size([slot_size, slot_size].into()),
+                    );
 
                     if response.hovered() {
                       // Tooltip on hover
