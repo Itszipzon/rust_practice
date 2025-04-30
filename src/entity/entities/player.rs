@@ -82,21 +82,6 @@ impl Player {
     self.cursor_item.is_some()
   }
 
-  pub fn move_item(&mut self, old_index: usize, new_index: usize) {
-    if old_index >= self.inventory.len() || new_index >= self.inventory.len() {
-      println!("Index out of bounds!");
-      return;
-    }
-
-    if self.inventory[new_index].is_none() {
-      println!("Moving item from {} to {}", old_index, new_index);
-      self.inventory[new_index] = self.inventory[old_index].take();
-    } else {
-      println!("Item already exists at index {}", new_index);
-      self.inventory.swap(old_index, new_index);
-    }
-  }
-
   pub fn move_inventory_item_to_cursor(&mut self, index: usize) {
     if let Some(item) = self.inventory[index].take() {
       self.cursor_item = Some(item);
@@ -113,25 +98,6 @@ impl Player {
           self.inventory[index] = Some(item);
           self.cursor_item = old_item;
         }
-      }
-    }
-  }
-
-  pub fn click_inventory_item(&mut self, index: usize) {
-    if index < self.inventory.len() {
-      if let Some(item) = &self.inventory[index] {
-        if let Some(cursor_item) = &self.cursor_item {
-          if item.id() == cursor_item.id() {
-            self.inventory[index] = None;
-            self.cursor_item = None;
-          } else {
-            self.cursor_item = Some(item.clone());
-          }
-        } else {
-          self.cursor_item = Some(item.clone());
-        }
-      } else {
-        self.cursor_item = None;
       }
     }
   }
@@ -200,9 +166,7 @@ impl Player {
     self
       .inventory
       .get(self.active_item as usize)
-      .and_then(|item| item.as_ref())
-      .and_then(|item| item.as_equipment())
-      .and_then(|eq| eq.as_weapon())
+      .and_then(|item| item.as_ref().unwrap().as_equipment().unwrap().as_weapon())
       .is_some()
   }
 
