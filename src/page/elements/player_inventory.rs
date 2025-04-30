@@ -17,6 +17,29 @@ impl PlayerInventory {
     let rows = 5;
     let slot_size = 50.0;
 
+    // Handle number key shortcuts BEFORE rendering
+    if app_state.player.has_cursor_item() {
+      for (i, key) in [
+        egui::Key::Num1,
+        egui::Key::Num2,
+        egui::Key::Num3,
+        egui::Key::Num4,
+        egui::Key::Num5,
+        egui::Key::Num6,
+        egui::Key::Num7,
+        egui::Key::Num8,
+        egui::Key::Num9,
+        egui::Key::Num0,
+      ]
+      .iter()
+      .enumerate()
+      {
+        if input.key_pressed(*key) {
+          app_state.player.move_cursor_item_to_inventory(i);
+        }
+      }
+    }
+
     egui::Grid::new("inventory_grid")
       .spacing([10.0, 10.0])
       .show(ui, |ui| {
@@ -29,9 +52,9 @@ impl PlayerInventory {
               .inventory
               .get(index)
               .and_then(|slot| slot.as_ref())
-              .map(|item| item.clone());
+              .map(Clone::clone);
 
-            if let Some(item) = maybe_item {
+            let response = if let Some(item) = maybe_item {
               let display_name = match item.item_type() {
                 ItemType::Equipment => item.as_equipment().unwrap().display_name(),
                 ItemType::Placeable => item.as_placeable().unwrap().display_name(),
@@ -49,42 +72,19 @@ impl PlayerInventory {
               );
 
               if response.hovered() {
-                let mut tooltip = ToolTip::new();
-                tooltip.show(ctx, &item, index);
+                ToolTip::new().show(ctx, &item, index);
               }
 
-              if response.clicked() {
-                if app_state.player.has_cursor_item() {
-                  app_state.player.move_cursor_item_to_inventory(index);
-                } else {
-                  app_state.player.move_inventory_item_to_cursor(index);
-                }
-              }
+              response
             } else {
-              let response = ui.add_sized([slot_size, slot_size], egui::Button::new(""));
-              if response.clicked() {
-                if app_state.player.has_cursor_item() {
-                  app_state.player.move_cursor_item_to_inventory(index);
-                }
-              }
-            }
-            for (i, key) in [
-              egui::Key::Num1,
-              egui::Key::Num2,
-              egui::Key::Num3,
-              egui::Key::Num4,
-              egui::Key::Num5,
-              egui::Key::Num6,
-              egui::Key::Num7,
-              egui::Key::Num8,
-              egui::Key::Num9,
-              egui::Key::Num0,
-            ]
-            .iter()
-            .enumerate()
-            {
-              if input.key_pressed(*key) && app_state.player.has_cursor_item() {
-                app_state.player.move_cursor_item_to_inventory(i);
+              ui.add_sized([slot_size, slot_size], egui::Button::new(""))
+            };
+
+            if response.clicked() {
+              if app_state.player.has_cursor_item() {
+                app_state.player.move_cursor_item_to_inventory(index);
+              } else {
+                app_state.player.move_inventory_item_to_cursor(index);
               }
             }
           }

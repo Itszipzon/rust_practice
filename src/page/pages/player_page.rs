@@ -17,6 +17,10 @@ impl PlayerPage {
 
       PlayerInventory::new().show(ctx, ui, app_state);
 
+      if ui.button("Print Inventory").clicked() {
+        println!("{:#?}", app_state.player.inventory);
+      }
+
       ui.separator();
 
       if ui.button("Go to Settings").clicked() {
