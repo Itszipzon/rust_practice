@@ -1,4 +1,4 @@
-use crate::{entity::player::Player, item::item::Item, page::page::Page, settings::Settings};
+use crate::{entity::entities::player::Player, item::item::Item, page::page::Page, settings::Settings};
 
 use std::vec;
 
