@@ -103,6 +103,7 @@ impl Player {
   }
 
   pub fn attack(&mut self, mut target: impl Entity) -> u32 {
+    let mut dmg = self.default_damage;
     if self.active_is_weapon() {
       let weapon = &mut self.inventory[self.active_item as usize];
       weapon
@@ -113,8 +114,7 @@ impl Player {
         .as_weapon_mut()
         .unwrap()
         .on_use();
-      let dmg = self.default_damage
-      + weapon
+      dmg += weapon
         .as_mut()
         .unwrap()
         .as_equipment_mut()
@@ -122,11 +122,10 @@ impl Player {
         .as_weapon_mut()
         .unwrap()
         .damage();
-      target.take_damage(dmg);
-      return dmg;
     }
 
-    self.default_damage
+    target.take_damage(dmg);
+    dmg
   }
 
   pub fn set_health(&mut self, health: u32) {
