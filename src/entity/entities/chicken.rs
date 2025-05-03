@@ -6,15 +6,17 @@ pub struct Chicken {
   is_alive: bool,
   health: u32,
   damage: u32,
+  hostile: bool,
 }
 
 impl Chicken {
-  pub fn new(description: String, health: u32) -> Self {
+  pub fn new() -> Self {
     Chicken {
-      description,
-      health,
+      description: "Chicken".to_string(),
+      health: 4,
       damage: 0,
       is_alive: true,
+      hostile: false,
     }
   }
 
@@ -29,19 +31,19 @@ impl Chicken {
 
 impl Entity for Chicken {
   fn description(&self) -> String {
-    format!("Chicken")
+    self.description.clone()
   }
 
   fn id(&self) -> u32 {
-    2
+    3
   }
 
   fn hostile(&self) -> bool {
-    false
+    self.hostile
   }
 
   fn health(&self) -> u32 {
-    4
+    self.health
   }
 
   fn take_damage(&mut self, damage: u32) {
@@ -54,7 +56,7 @@ impl Entity for Chicken {
   }
 
   fn damage(&self) -> u32 {
-    0
+    self.damage
   }
 
   fn entity_kind(&self) -> crate::entity::entity_kind::EntityKind {

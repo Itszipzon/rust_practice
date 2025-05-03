@@ -6,15 +6,17 @@ pub struct Zombie {
   is_alive: bool,
   health: u32,
   damage: u32,
+  hostile: bool,
 }
 
 impl Zombie {
-  pub fn new(description: String, health: u32, damage: u32) -> Self {
+  pub fn new() -> Self {
     Zombie {
-      description,
-      health,
-      damage,
+      description: "Zombie".to_string(),
+      health: 6,
+      damage: 2,
       is_alive: true,
+      hostile: true,
     }
   }
 
@@ -42,15 +44,15 @@ impl Entity for Zombie {
   }
 
   fn hostile(&self) -> bool {
-    true
+    self.hostile
   }
 
   fn health(&self) -> u32 {
-    6
+    self.health
   }
 
   fn damage(&self) -> u32 {
-    1
+    self.damage
   }
 
   fn take_damage(&mut self, damage: u32) {
