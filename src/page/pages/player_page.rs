@@ -15,7 +15,7 @@ impl PlayerPage {
       ui.heading(format!("{}'s Player Page", app_state.player.name));
       ui.label(format!("Player Name: {}", app_state.player.name));
 
-      PlayerInventory::new().show(ctx, ui, app_state);
+      PlayerInventory::new().show(ctx, ui, &mut app_state.player);
 
       if ui.button("Print Inventory").clicked() {
         println!("{:#?}", app_state.player.inventory);

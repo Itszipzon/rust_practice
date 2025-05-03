@@ -1,6 +1,6 @@
 use eframe::egui::{self, Context};
 
-use crate::{appstate::AppState, item::item_type::ItemType};
+use crate::{entity::entities::player::Player, item::item_type::ItemType};
 
 use super::tooltip::ToolTip;
 
@@ -11,14 +11,14 @@ impl PlayerInventory {
     PlayerInventory {}
   }
 
-  pub fn show(&mut self, ctx: &Context, ui: &mut egui::Ui, app_state: &mut AppState) {
+  pub fn show(&mut self, ctx: &Context, ui: &mut egui::Ui, player: &mut Player) {
     let input = ctx.input(|i| i.clone());
     let columns = 10;
     let rows = 5;
     let slot_size = 50.0;
 
     // Handle number key shortcuts BEFORE rendering
-    if app_state.player.has_cursor_item() {
+    if player.has_cursor_item() {
       for (i, key) in [
         egui::Key::Num1,
         egui::Key::Num2,
@@ -35,7 +35,7 @@ impl PlayerInventory {
       .enumerate()
       {
         if input.key_pressed(*key) {
-          app_state.player.move_cursor_item_to_inventory(i);
+          player.move_cursor_item_to_inventory(i);
         }
       }
     }
@@ -47,8 +47,7 @@ impl PlayerInventory {
           for col in 0..columns {
             let index = row * columns + col;
 
-            let maybe_item = app_state
-              .player
+            let maybe_item = player
               .inventory
               .get(index)
               .and_then(|slot| slot.as_ref())
@@ -81,10 +80,10 @@ impl PlayerInventory {
             };
 
             if response.clicked() {
-              if app_state.player.has_cursor_item() {
-                app_state.player.move_cursor_item_to_inventory(index);
+              if player.has_cursor_item() {
+                player.move_cursor_item_to_inventory(index);
               } else {
-                app_state.player.move_inventory_item_to_cursor(index);
+                player.move_inventory_item_to_cursor(index);
               }
             }
           }
