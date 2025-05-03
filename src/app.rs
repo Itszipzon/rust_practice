@@ -42,7 +42,7 @@ impl eframe::App for App {
       ),
       (
         egui::TextStyle::Button,
-        egui::FontId::new(15.0, egui::FontFamily::Proportional),
+        egui::FontId::new(14.0, egui::FontFamily::Proportional),
       ),
     ]
     .into();
