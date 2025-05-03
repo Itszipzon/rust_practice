@@ -10,13 +10,13 @@ pub struct Skeleton {
 }
 
 impl Skeleton {
-  pub fn new() -> Self {
+  pub fn new(description: String, health: u32, damage: u32, is_alive: bool, hostile: bool) -> Self {
     Skeleton {
-      description: "Skeleton".to_string(),
-      health: 6,
-      damage: 1,
-      is_alive: true,
-      hostile: true,
+      description,
+      health,
+      damage,
+      is_alive,
+      hostile,
     }
   }
 
@@ -66,5 +66,11 @@ impl Entity for Skeleton {
 
   fn entity_kind(&self) -> crate::entity::entity_kind::EntityKind {
     EntityKind::Skeleton(self.clone())
+  }
+}
+
+impl Default for Skeleton {
+  fn default() -> Self {
+    Skeleton::new("Skeleton".to_string(), 6, 1, true, true)
   }
 }

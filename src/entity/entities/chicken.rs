@@ -10,13 +10,13 @@ pub struct Chicken {
 }
 
 impl Chicken {
-  pub fn new() -> Self {
+  pub fn new(description: String, health: u32, damage: u32, is_alive: bool, hostile: bool) -> Self {
     Chicken {
-      description: "Chicken".to_string(),
-      health: 4,
-      damage: 0,
-      is_alive: true,
-      hostile: false,
+      description,
+      health,
+      damage,
+      is_alive,
+      hostile,
     }
   }
 
@@ -61,5 +61,17 @@ impl Entity for Chicken {
 
   fn entity_kind(&self) -> crate::entity::entity_kind::EntityKind {
     EntityKind::Chicken(self.clone())
+  }
+}
+
+impl Default for Chicken {
+  fn default() -> Self {
+    Chicken {
+      description: "Chicken".to_string(),
+      is_alive: true,
+      health: 4,
+      damage: 0,
+      hostile: false,
+    }
   }
 }

@@ -10,13 +10,13 @@ pub struct Zombie {
 }
 
 impl Zombie {
-  pub fn new() -> Self {
+  pub fn new(description: String, health: u32, damage: u32, is_alive: bool, hostile: bool) -> Self {
     Zombie {
-      description: "Zombie".to_string(),
-      health: 6,
-      damage: 2,
-      is_alive: true,
-      hostile: true,
+      description,
+      health,
+      damage,
+      is_alive,
+      hostile,
     }
   }
 
@@ -66,5 +66,11 @@ impl Entity for Zombie {
 
   fn entity_kind(&self) -> EntityKind {
     EntityKind::Zombie(self.clone())
+  }
+}
+
+impl Default for Zombie {
+  fn default() -> Self {
+    Zombie::new("Zombie".to_string(), 6, 2, true, true)
   }
 }
