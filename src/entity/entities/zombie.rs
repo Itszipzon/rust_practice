@@ -46,11 +46,11 @@ impl Entity for Zombie {
   }
 
   fn health(&self) -> u32 {
-    5
+    6
   }
 
   fn damage(&self) -> u32 {
-    2
+    1
   }
 
   fn take_damage(&mut self, damage: u32) {

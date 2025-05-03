@@ -41,7 +41,7 @@ impl Entity for Chicken {
   }
 
   fn health(&self) -> u32 {
-    2
+    4
   }
 
   fn take_damage(&mut self, damage: u32) {

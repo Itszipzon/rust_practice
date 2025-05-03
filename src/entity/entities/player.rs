@@ -185,7 +185,7 @@ impl Entity for Player {
   }
 
   fn damage(&self) -> u32 {
-    5
+    2
   }
 
   fn take_damage(&mut self, damage: u32) {

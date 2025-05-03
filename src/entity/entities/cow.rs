@@ -41,7 +41,7 @@ impl Entity for Cow {
   }
 
   fn health(&self) -> u32 {
-    2
+    6
   }
 
   fn take_damage(&mut self, damage: u32) {

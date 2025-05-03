@@ -46,7 +46,7 @@ impl Entity for Skeleton {
   }
 
   fn health(&self) -> u32 {
-    2
+    6
   }
 
   fn take_damage(&mut self, damage: u32) {
@@ -59,7 +59,7 @@ impl Entity for Skeleton {
   }
 
   fn damage(&self) -> u32 {
-    0
+    1
   }
 
   fn entity_kind(&self) -> crate::entity::entity_kind::EntityKind {
